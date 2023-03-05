@@ -13,6 +13,7 @@ import {
 import { ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CsvParser } from 'src/providers/csv-parser.provider';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SearchUserDto } from './dto/search-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
@@ -36,6 +37,7 @@ export class UserController {
   @ApiOkResponse({ type: UserDto })
   @ApiNotFoundResponse()
   async updateById(@Param('_id') _id: string, @Body() body: UpdateUserDto): Promise<UserDto> {
+    //TODO: Looking a new way to avoid the twice query for the same user.
     const userSaved = await this.userService.findByObjectId(_id);
     if(!userSaved){
       throw new NotFoundException(`User id '${_id}' not found.`)
@@ -84,7 +86,7 @@ export class UserController {
   @Post('/search')
   @ApiOperation({ summary: 'Search a user by combination of firstName, lastName, username.' })
   @ApiOkResponse({ type: UserDto })
-  async search(@Body() body: Pick<UpdateUserDto, "firstName" | "lastName" | "username">): Promise<UserDto> {
+  async search(@Body() body: SearchUserDto): Promise<UserDto> {
     const user = await this.userService.searchUser(body);
 
     if(!user) {
