@@ -19,20 +19,27 @@ import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User API')
-@Controller('user')
+@Controller('users')
 export class UserController {
   private logger = new Logger(UserController.name);
 
   constructor(private readonly userService: UserService) {}
 
-  @Post('/create')
+  @Get('/')
+  @ApiOperation({ summary: 'Get list of user' })
+  @ApiOkResponse({ type: UserDto })
+  async getAllUsers(): Promise<UserDto[]>{
+    return await this.userService.getAllUsers()
+  }
+
+  @Post('/')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiOkResponse({ type: UserDto })
   async create(@Body() body: CreateUserDto): Promise<UserDto> {
     return await this.userService.createUser(body);
   }
 
-  @Patch('/update/:_id')
+  @Patch('/:_id')
   @ApiOperation({ summary: 'Partially update a user' })
   @ApiOkResponse({ type: UserDto })
   @ApiNotFoundResponse()

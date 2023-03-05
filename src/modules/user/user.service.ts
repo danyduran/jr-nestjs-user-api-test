@@ -10,6 +10,10 @@ export class UserService {
 
   constructor(@InjectModel(User.name, MONGO_DB_NAME) private userModel: Model<UserDoc>) {}
 
+  async getAllUsers(): Promise<User[]>{
+    return await this.userModel.find({})
+  }
+
   async createUser(user: Partial<User>): Promise<User> {
     const newUser = new this.userModel(user);
     return await newUser.save();
