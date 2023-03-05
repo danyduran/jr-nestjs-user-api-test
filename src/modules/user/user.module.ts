@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/soldcom', { connectionName: MONGO_DB_NAME }),
+    MongooseModule.forRoot('mongodb://localhost:27017/soldcom', { connectionName: MONGO_DB_NAME }),
     MongooseModule.forFeature(
       [
         {

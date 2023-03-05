@@ -30,10 +30,14 @@ export class UserService {
   }
 
   async findByUserName(username: string): Promise<User> {
-    return null;
+    return await this.userModel.findOne({username});
   }
 
   async patchUser(_id: string, user: Partial<User>): Promise<User> {
-    return null;
+    return await this.userModel.findByIdAndUpdate(_id, user, {new: true});
+  }
+
+  async searchUser(user: Partial<User>): Promise<User> {
+    return await this.userModel.findOne(user)
   }
 }

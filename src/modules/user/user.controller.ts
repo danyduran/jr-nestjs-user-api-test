@@ -71,17 +71,32 @@ export class UserController {
     return user;
   }
 
+  @Post('/search')
+  @ApiOperation({ summary: 'Search a user by combination of firstName, lastName, username.' })
+  @ApiOkResponse({ type: UserDto })
+  async search(@Body() body: Pick<UpdateUserDto, "firstName" | "lastName" | "username">): Promise<UserDto> {
+    const user = await this.userService.searchUser(body);
+
+    if(!user) {
+      throw new NotFoundException(`User not found.`);
+    }
+
+    return user;
+  }
+
   @Post('/seed-data')
   @ApiOperation({ summary: 'Load data from ./seed-data/users.csv into our mongo database' })
   async seedData(): Promise<boolean> {
     const users = await CsvParser.parse('seed-data/users.csv');
-    let results = false;
+    let results = true;
 
-    /**
-     *
-     * @todo
-     * Loop through all the users and save into the database
-     */
+    for await (const user of users) {
+      try {
+        this.userService.createUser(user)
+      } catch (error) {
+        results = false
+      }
+    }
 
     return results;
   }

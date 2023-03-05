@@ -23,6 +23,9 @@ export class User {
 
   @Prop({ unique: true, index: true })
   username: string;
+
+  @Prop({ unique: true, index: true })
+  email: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
